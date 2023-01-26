@@ -10,7 +10,7 @@ import io.activej.inject.annotation.Provides;
 import io.activej.launcher.Launcher;
 import io.activej.launchers.http.HttpServerLauncher;
 import models.Contact;
-import models.Info;
+import models.Presentation;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -22,14 +22,8 @@ public class Main extends HttpServerLauncher {
     AsyncServlet servlet() {
         return RoutingServlet.create()
                 .map(GET, "/", request -> {
-                    Info info = new Info(
-                            "Hi, this is an Activej Rest API",
-                            new String[] { "/addContact", "/getAllContacts" },
-                            "Raul Armas"
-                    );
-
                     return HttpResponse.ok200()
-                            .withJson(gson.toJson(info));
+                            .withJson(gson.toJson(new Presentation()));
                 })
 
                 .map(GET, "/getAllContacts", request -> HttpResponse.ok200()
@@ -41,7 +35,8 @@ public class Main extends HttpServerLauncher {
                             Contact newContact = gson.fromJson(body, Contact.class);
                             contacts.add(newContact);
 
-                            return HttpResponse.ok200().withJson("{ status: \"OK\" }");
+                            return HttpResponse.ok200()
+                                    .withJson("{ status: \"OK\" }");
                         })
                 );
     }
