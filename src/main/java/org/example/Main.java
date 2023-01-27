@@ -14,20 +14,18 @@ import models.Presentation;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class Main extends HttpServerLauncher {
+final public class Main extends HttpServerLauncher {
     ArrayList<Contact> contacts = new ArrayList<>();
     Gson gson = new Gson();
 
     @Provides
     AsyncServlet servlet() {
         return RoutingServlet.create()
-                .map(GET, "/", request -> {
-                    return HttpResponse.ok200()
-                            .withJson(gson.toJson(new Presentation()));
-                })
+                .map(GET, "/", request -> HttpResponse.ok200()
+                        .withJson(gson.toJson(new Presentation())))
 
                 .map(GET, "/getAllContacts", request -> HttpResponse.ok200()
-                            .withJson(gson.toJson(contacts)))
+                        .withJson(gson.toJson(contacts)))
 
                 .map(POST, "/addContact", request -> request.loadBody()
                         .map($ -> {
@@ -36,7 +34,7 @@ public class Main extends HttpServerLauncher {
                             contacts.add(newContact);
 
                             return HttpResponse.ok200()
-                                    .withJson("{ status: \"OK\" }");
+                                    .withJson("{ status: \"Done\" }");
                         })
                 );
     }
